@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candy Store CRUD</title>
+</head>
+<body>
+    <h1>Candy Shope Seller Dashboard</h1>
+    
+    <form id="candyForm">
+        <label for="candyName">Candy Name:</label>
+        <input type="text" id="candyName" required>
+        
+        <label for="description">Description:</label>
+        <input type="text" id="description" required>
+        
+        <label for="price">Price:</label>
+        <input type="number" id="price" required>
+        
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" required>
+        
+        <button type="submit" id="addItem">Add Item</button>
+    </form>
+    
+    <h2>Candy List</h2>
+    <ul id="candyList"></ul>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const candyForm = document.getElementById("candyForm");
+            const candyList = document.getElementById("candyList");
+            
+            // Load candies from localStorage on page load
+            const candies = JSON.parse(localStorage.getItem("candies")) || [];
+            
+            // Function to display candies in the list
+            function displayCandies() {
+                candyList.innerHTML = "";
+                candies.forEach((candy, index) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <strong>${candy.candyName}</strong> - ${candy.description} - ${candy.price}rs - Quantity: ${candy.quantity}
+                        <button class="delete" data-index="${index}">Delete</button>
+                    `;
+                    candyList.appendChild(li);
+                });
+            }
+            
+            displayCandies();
+            
+            candyForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                const candyName = document.getElementById("candyName").value;
+                const description = document.getElementById("description").value;
+                const price = parseFloat(document.getElementById("price").value);
+                const quantity = parseInt(document.getElementById("quantity").value);
+                
+                // Add the new candy to the candies array
+                candies.push({ candyName, description, price , quantity });
+                
+                // Save the updated candies array to localStorage
+                localStorage.setItem("candies", JSON.stringify(candies));
+                
+                // Clear the form inputs
+                candyForm.reset();
+                
+                // Update the candy list
+                displayCandies();
+            });
+            
+            candyList.addEventListener("click", function(event) {
+                if (event.target.classList.contains("delete")) {
+                    const index = parseInt(event.target.getAttribute("data-index"));
+                    candies.splice(index, 1);
+                    localStorage.setItem("candies", JSON.stringify(candies));
+                    displayCandies();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
