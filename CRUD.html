@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candy Store CRUD</title>
+    <title>Candy Shop</title>
 </head>
 <body>
-    <h1>Candy Shope Seller Dashboard</h1>
+    <h1>Candy Shop</h1>
     
     <form id="candyForm">
         <label for="candyName">Candy Name:</label>
@@ -42,9 +42,11 @@
                     const li = document.createElement("li");
                     li.innerHTML = `
                         <strong>${candy.candyName}</strong> - ${candy.description} - ${candy.price}rs - Quantity: ${candy.quantity}
-                        <button class="delete" data-index="${index}">Delete</button>
+                        <button class="buy" data-index="${index}">Buy</button>
+                        <button class="buyTwo" data-index="${index}">BuyTwo</button>
+                        <button class="buyThree" data-index="${index}">BuyThree</button>
                     `;
-                    candyList.appendChild(li);
+                    candyList.append(li);
                 });
             }
             
@@ -59,26 +61,52 @@
                 const quantity = parseInt(document.getElementById("quantity").value);
                 
                 // Add the new candy to the candies array
-                candies.push({ candyName, description, price , quantity });
+                candies.push({ candyName, description, price, quantity });
                 
                 // Save the updated candies array to localStorage
                 localStorage.setItem("candies", JSON.stringify(candies));
-                
-                // Clear the form inputs
-                candyForm.reset();
                 
                 // Update the candy list
                 displayCandies();
             });
             
             candyList.addEventListener("click", function(event) {
-                if (event.target.classList.contains("delete")) {
-                    const index = parseInt(event.target.getAttribute("data-index"));
-                    candies.splice(index, 1);
-                    localStorage.setItem("candies", JSON.stringify(candies));
-                    displayCandies();
-                }
-            });
+            if (event.target.classList.contains("buy")) {
+        const index = parseInt(event.target.getAttribute("data-index"));
+        const candy = candies[index];
+
+        if (candy.quantity > 0) {
+            candy.quantity--; // Decrease the quantity after buying
+            localStorage.setItem("candies", JSON.stringify(candies));
+            displayCandies(); // Update the candy list
+        }else{
+            alert("Not enough")
+        }
+       } else if (event.target.classList.contains("buyTwo")) {
+        const index = parseInt(event.target.getAttribute("data-index"));
+        const candy = candies[index];
+
+        if (candy.quantity >= 2) {
+            candy.quantity -= 2; 
+            localStorage.setItem("candies", JSON.stringify(candies));
+            displayCandies(); 
+        } else {
+            alert("Not enough ");
+        }
+       } else if (event.target.classList.contains("buyThree")) {
+        const index = parseInt(event.target.getAttribute("data-index"));
+        const candy = candies[index];
+
+        if (candy.quantity >= 3) {
+            candy.quantity -= 3; 
+            localStorage.setItem("candies", JSON.stringify(candies));
+            displayCandies(); 
+        } else {
+            alert("Not enough ");
+        }
+        }
+       });
+
         });
     </script>
 </body>
